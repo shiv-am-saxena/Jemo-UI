@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../context/hooks";
 import { clearUser } from "../context/userSlice";
+import { TextRoll } from "./ui/TextRoll";
 
 function Navbar() {
     const dispatch = useAppDispatch();
@@ -18,8 +19,10 @@ function Navbar() {
         <header className="bg-[#0e0e0e] px-2 py-4 md:px-4">
             <nav className="container mx-auto flex items-center justify-between">
                 <div className="flex gap-2 md:gap-6 items-center justify-between">
-                    <div className="px-3 py-1 bg-zinc-800 border border-white rounded-xl text-center text-white text-lg font-mono">P</div>
-                    <h1 className="text-white text-lg font-bold ">Perplexity</h1>
+                    <div className="px-3 py-1 bg-zinc-800 border border-white rounded-xl text-center text-white text-lg font-mono">J</div>
+                    <TextRoll center className="text-white uppercase text-lg md:text-2xl font-bold">
+                        Jemo
+                    </TextRoll>
                 </div>
                 <div className="relative">
                     {isAuthenticated ? (
