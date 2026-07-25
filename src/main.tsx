@@ -6,13 +6,17 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './utils/AppRouter.tsx'
+import Navbar from './components/Navbar.tsx'
 
 createRoot(document.getElementById('root')!).render(
 	<BrowserRouter>
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
 				<StrictMode>
+					<>
+					<Navbar />
 					<AppRouter />
+					</>
 				</StrictMode>
 			</PersistGate>
 		</Provider>
