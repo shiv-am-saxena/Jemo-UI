@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../context/hooks";
 import { clearUser } from "../context/userSlice";
 import { TextRoll } from "./ui/TextRoll";
+import { toast } from "sonner";
 
 function Navbar() {
     const dispatch = useAppDispatch();
@@ -10,13 +11,14 @@ function Navbar() {
     const { isAuthenticated, user } = useAppSelector(state => state.auth);
     const location = useNavigate();
     const handleLogout = () => {
-        //TODO: Implement logout logic here
         dispatch(clearUser());
+        localStorage.removeItem("token");
         location("/", { replace: true });
         setIsOpen(false);
+        toast.success("Logged out successfully!");
     };
     return (
-        <header className="fixed bg-[#0e0e0e] px-2 py-4 md:px-4 w-full">
+        <header className="fixed bg-[#0e0e0e] px-2 py-4 md:px-4 w-full z-1">
             <nav className="container mx-auto flex items-center justify-between">
                 <div className="flex gap-2 md:gap-6 items-center justify-between">
                     <div className="px-3 py-1 bg-zinc-800 border border-white rounded-xl text-center text-white text-lg font-mono">J</div>

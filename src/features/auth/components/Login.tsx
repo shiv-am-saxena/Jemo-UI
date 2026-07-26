@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useState, type JSX } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-
-function Login() {
+import { useAppDispatch } from "../../../context/hooks";
+import axiosInstance from '../../../utils/axiosConfig';
+import { setUser } from '../../../context/userSlice';
+import { toast } from 'sonner';
+function Login(): JSX.Element {
     const [showPassword, setShowPassword] = useState(false)
-
+    const dispatch = useAppDispatch()
     const {
         register,
         handleSubmit,
@@ -17,8 +20,19 @@ function Login() {
         }
     })
 
-    const onSubmit = (data: unknown) => {
-        console.log("Login Form Submitted:", data)
+    const onSubmit = async(data: unknown) => {
+        try {
+            const response = await axiosInstance.post('/auth/login', data)
+            const { user, token } = await response.data.data
+            localStorage.setItem('token', token)
+            dispatch(setUser({user: user, token}))
+            console.log("Login Form Submitted:", data)
+            toast.success("Login successful!")
+        }
+        catch (error) {
+            console.error("Login Error:", error)
+            toast.error("Login failed. Please check your credentials and try again.")
+        }
     }
 
     return (
@@ -29,14 +43,14 @@ function Login() {
             <div className="w-full max-w-md my-3 border border-zinc-600 rounded-lg p-6 bg-[#1e1e1e]">
                 {/* Social Login */}
                 <div className="social flex gap-4">
-                    <button className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
+                    <a href='http://localhost:3000/auth/google' className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
                         <img src="/google.svg" alt="Google" className="w-5 h-5" />
                         <span className="text-white">Google</span>
-                    </button>
-                    <button className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
+                    </a>
+                    <a href='http://localhost:3000/auth/github' className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
                         <img src="/github.svg" alt="GitHub" className="w-5 h-5" />
                         <span className="text-white">GitHub</span>
-                    </button>
+                    </a>
                 </div>
 
                 <div className="divider mt-2 text-white text-center flex gap-2 items-center">

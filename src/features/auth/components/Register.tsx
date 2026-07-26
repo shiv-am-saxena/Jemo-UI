@@ -1,10 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useForm, useWatch } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
+import { toast } from 'sonner'
+import axiosInstance from '../../../utils/axiosConfig'
 
 function Register() {
     const [showPassword, setShowPassword] = useState(false)
+    const [searchParams, setSearchParams] = useSearchParams();
+    useEffect(() => {
+        const errorMessage = searchParams.get("error");
+        if (errorMessage) {
+            toast.error(decodeURIComponent(errorMessage));
+            searchParams.delete("error");
+            setSearchParams(searchParams, { replace: true });
+        }
+    }, [searchParams, setSearchParams]);
 
     const {
         register,
@@ -30,8 +41,16 @@ function Register() {
         symbol: /[^A-Za-z0-9]/.test(password),
     }
 
-    const onSubmit = (data: unknown) => {
-        console.log("Form Submitted:", data)
+    const onSubmit = async (data: unknown) => {
+        try {
+            console.log("Form Submitted:", data)
+            const response = await axiosInstance.post('/auth/register', data)
+            const message = await response.data.message
+            toast.success(message);
+        } catch (error) {
+            toast.error("Registration failed. Please check your input and try again.")
+            console.log("User not registered", error);
+        }
     }
 
     return (
@@ -41,14 +60,14 @@ function Register() {
             <div className="w-full max-w-md my-3 border border-zinc-600 rounded-lg p-6 bg-[#1e1e1e]">
                 {/* Registration form */}
                 <div className="social flex gap-4">
-                    <button className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
+                    <a href="http://localhost:3000/auth/google/register" className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
                         <img src="/google.svg" alt="Google" className="w-5 h-5" />
                         <span className="text-white">Google</span>
-                    </button>
-                    <button className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
+                    </a>
+                    <a href="http://localhost:3000/auth/github" className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
                         <img src="/github.svg" alt="GitHub" className="w-5 h-5" />
                         <span className="text-white">GitHub</span>
-                    </button>
+                    </a>
                 </div>
 
                 <div className="divider mt-2 text-white text-center flex gap-2 items-center">

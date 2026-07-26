@@ -30,8 +30,8 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		setUser: (state, action: PayloadAction<UserState>) => {
-			state.user = action.payload;
+		setUser: (state, action: PayloadAction<{user: UserState, token: string}>) => {
+			state.user = action.payload.user;
 			state.isAuthenticated = true;
             state.token = action.payload.token;
             state.isLoading = false;
@@ -40,11 +40,14 @@ const userSlice = createSlice({
 			state.user = null;
 			state.isAuthenticated = false;
 			state.token = "";
-        },
+		},
+		setToken: (state, action: PayloadAction<string>) => {
+			state.token = action.payload;
+		},
         setLoading: (state) => {
 			state.isLoading = true;
 		},
 	},
 });
 export default userSlice.reducer;
-export const { setUser, clearUser, setLoading } = userSlice.actions;
+export const { setUser, clearUser, setLoading, setToken } = userSlice.actions;
