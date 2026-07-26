@@ -2,12 +2,17 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useState, type JSX } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-import { useAppDispatch } from "../../../context/hooks";
-import axiosInstance from '../../../utils/axiosConfig';
+import { useAppDispatch, useAppSelector } from "../../../context/hooks";
 import { setUser } from '../../../context/userSlice';
 import { toast } from 'sonner';
+import useAuth from '../hooks/useAuth';
+import { isAxiosError } from 'axios';
+
 function Login(): JSX.Element {
+
     const [showPassword, setShowPassword] = useState(false)
+    const { isLoading } = useAppSelector(state => state.auth)
+    const { handleLogin } = useAuth()
     const dispatch = useAppDispatch()
     const {
         register,
@@ -20,21 +25,28 @@ function Login(): JSX.Element {
         }
     })
 
-    const onSubmit = async(data: unknown) => {
+    const onSubmit = async (data: { email: string; password: string }) => {
         try {
-            const response = await axiosInstance.post('/auth/login', data)
-            const { user, token } = await response.data.data
+            const response = await handleLogin(data);
+            const { user, token } = response;
             localStorage.setItem('token', token)
-            dispatch(setUser({user: user, token}))
-            console.log("Login Form Submitted:", data)
+            dispatch(setUser({ user: user, token }))
             toast.success("Login successful!")
         }
         catch (error) {
-            console.error("Login Error:", error)
-            toast.error("Login failed. Please check your credentials and try again.")
+            if (isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Login failed";
+                console.error("Login Error:", errorMessage);
+                toast.error(errorMessage);
+            } else {
+                console.error("Unexpected Error:", error);
+                toast.error("Login failed due to an unexpected error. Please try again.");
+            }
         }
     }
-
+    const handleOAuthLogin = (provider: string) => {
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/${provider}`;
+    };
     return (
         <>
             <h3 className="text-white text-2xl text-center font-bold">Welcome Back</h3>
@@ -43,14 +55,14 @@ function Login(): JSX.Element {
             <div className="w-full max-w-md my-3 border border-zinc-600 rounded-lg p-6 bg-[#1e1e1e]">
                 {/* Social Login */}
                 <div className="social flex gap-4">
-                    <a href='http://localhost:3000/auth/google' className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
+                    <button onClick={() => handleOAuthLogin("google")} className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
                         <img src="/google.svg" alt="Google" className="w-5 h-5" />
                         <span className="text-white">Google</span>
-                    </a>
-                    <a href='http://localhost:3000/auth/github' className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
+                    </button>
+                    <button onClick={() => handleOAuthLogin("github")} className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e] transition-colors">
                         <img src="/github.svg" alt="GitHub" className="w-5 h-5" />
                         <span className="text-white">GitHub</span>
-                    </a>
+                    </button>
                 </div>
 
                 <div className="divider mt-2 text-white text-center flex gap-2 items-center">
@@ -103,7 +115,7 @@ function Login(): JSX.Element {
                         {errors.password && <p className="text-red-400 text-sm mt-1">{String(errors.password.message)}</p>}
                     </div>
 
-                    <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-500 transition-colors mt-2">
+                    <button type="submit" disabled={isLoading} className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-500 transition-colors mt-2">
                         Log In
                     </button>
                 </form>

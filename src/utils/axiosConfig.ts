@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-	baseURL: import.meta.env.API || "http://localhost:3000", // Replace with your backend API URL
+	baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000", // Replace with your backend API URL
 	headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
     },
-    // withCredentials: true,
+    withCredentials: true,
 });
 
 export default axiosInstance;

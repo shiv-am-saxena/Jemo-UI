@@ -3,10 +3,12 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { toast } from 'sonner'
-import axiosInstance from '../../../utils/axiosConfig'
+import useAuth from '../hooks/useAuth'
+import { isAxiosError } from 'axios'
 
 function Register() {
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     useEffect(() => {
         const errorMessage = searchParams.get("error");
@@ -40,19 +42,29 @@ function Register() {
         number: /\d/.test(password),
         symbol: /[^A-Za-z0-9]/.test(password),
     }
-
-    const onSubmit = async (data: unknown) => {
+    const { handleRegister } = useAuth();
+    const onSubmit = async (data: { name: string; email: string; password: string }) => {
         try {
-            console.log("Form Submitted:", data)
-            const response = await axiosInstance.post('/auth/register', data)
-            const message = await response.data.message
+            setIsLoading(true);
+            const response = await handleRegister(data)
+            const message = response
             toast.success(message);
         } catch (error) {
-            toast.error("Registration failed. Please check your input and try again.")
-            console.log("User not registered", error);
+            if (isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Registration failed";
+                console.error("Registration Error:", errorMessage);
+                toast.error(errorMessage);
+            } else {
+                console.error("Unexpected Error:", error);
+                toast.error("Registration failed due to an unexpected error. Please try again.");
+            }
+        } finally {
+            setIsLoading(false);
         }
     }
-
+    const handleOAuthLogin = (provider: string) => {
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/${provider}`;
+    };
     return (
         <>
             <h3 className="text-white text-2xl text-center font-bold">Register</h3>
@@ -60,14 +72,14 @@ function Register() {
             <div className="w-full max-w-md my-3 border border-zinc-600 rounded-lg p-6 bg-[#1e1e1e]">
                 {/* Registration form */}
                 <div className="social flex gap-4">
-                    <a href="http://localhost:3000/auth/google/register" className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
+                    <button onClick={() => handleOAuthLogin("google/register")} className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
                         <img src="/google.svg" alt="Google" className="w-5 h-5" />
                         <span className="text-white">Google</span>
-                    </a>
-                    <a href="http://localhost:3000/auth/github" className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
+                    </button>
+                    <button onClick={() => handleOAuthLogin("github")} className="w-full flex items-center justify-center gap-2 border border-zinc-600 rounded-lg p-2 mb-4 hover:bg-[#2e2e2e]">
                         <img src="/github.svg" alt="GitHub" className="w-5 h-5" />
                         <span className="text-white">GitHub</span>
-                    </a>
+                    </button>
                 </div>
 
                 <div className="divider mt-2 text-white text-center flex gap-2 items-center">
@@ -155,7 +167,7 @@ function Register() {
                         {errors.password && <p className="text-red-400 text-sm mt-1">{String(errors.password.message)}</p>}
                     </div>
 
-                    <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-500 transition-colors mt-2">
+                    <button type="submit" disabled={isLoading} className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-500 transition-colors mt-2">
                         Register
                     </button>
                 </form>

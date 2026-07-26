@@ -4,12 +4,11 @@ import Auth from "../features/auth/page/Auth";
 import Register from "../features/auth/components/Register";
 import Login from "../features/auth/components/Login";
 import Callback from "../features/auth/page/Callback";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../features/auth/hooks/useAuth";
 import Verification from "../features/auth/page/Verification";
 
 function AppRouter() {
-    const user = useAuth();
-    console.log("AppRouter user:", user);
+    useAuth();
     return (
         <Routes>
             <Route path="/" element={<App />} />
