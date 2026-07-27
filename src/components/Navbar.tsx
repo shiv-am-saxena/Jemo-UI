@@ -1,22 +1,17 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../context/hooks";
-import { clearUser } from "../context/userSlice";
+import { Link, useLocation } from "react-router-dom";
+import { useAppSelector } from "../context/hooks";
 import { TextRoll } from "./ui/TextRoll";
-import { toast } from "sonner";
+import useAuth from "../features/auth/hooks/useAuth";
 
 function Navbar() {
-    const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = React.useState(false);
     const { isAuthenticated, user } = useAppSelector(state => state.auth);
-    const location = useNavigate();
-    const handleLogout = () => {
-        dispatch(clearUser());
-        localStorage.removeItem("token");
-        location("/", { replace: true });
-        setIsOpen(false);
-        toast.success("Logged out successfully!");
-    };
+    const location = useLocation();
+    const { handleLogout } = useAuth();
+    if(location.pathname.includes("/chat")) {
+        return null;
+    }
     return (
         <header className="fixed bg-[#0e0e0e] px-2 py-4 md:px-4 w-full z-1">
             <nav className="container mx-auto flex items-center justify-between">

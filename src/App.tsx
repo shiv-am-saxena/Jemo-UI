@@ -1,8 +1,9 @@
 import Silk from './components/ui/Background'
 import GeminiInputBox from './components/ui/Input';
-
+import useChat from './features/chat/hooks/useChat';
 
 export default function App() {
+	useChat();
 	return (
 		<main className="container mx-auto bg-[#0e0e0e] min-h-screen min-w-full flex">
 			<header className="relative min-h-full w-full flex flex-col items-center justify-center overflow-hidden">
