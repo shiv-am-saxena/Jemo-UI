@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { TbMenu, TbX } from "react-icons/tb";
 import { SidebarContext, useSidebar } from "../../hooks/useSidebar";
+import { Link } from "react-router-dom";
 
 interface Links {
     label: string;
@@ -149,8 +150,8 @@ export const SidebarLink = ({
 }) => {
     const { open, setOpen, animate } = useSidebar();
     return (
-        <a
-            href={link.href}
+        <Link
+            to={link.href}
             className={cn(
                 "flex items-center justify-start gap-2  group/sidebar py-2",
                 className
@@ -172,6 +173,6 @@ export const SidebarLink = ({
             >
                 {link.label}
             </motion.span>
-        </a>
+        </Link>
     );
 };

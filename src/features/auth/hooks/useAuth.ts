@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../context/hooks";
+import { useAppDispatch, useAppSelector } from "../../../context/hooks";
 import { clearUser, setLoading, setToken, setUser } from "../../../context/userSlice";
 import axiosInstance from "../../../utils/axiosConfig";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 export default function useAuth() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
-	
+
 	const handleRegister = async (data: { name: string; email: string; password: string }) => {
 		const response = await axiosInstance.post("/auth/register", data);
 		return response.data.message;
@@ -78,13 +78,19 @@ export default function useAuth() {
 		navigate("/", { replace: true });
 	}, [dispatch, handleGetProfile, navigate]);
 
+
+	const { user } = useAppSelector((state) => state.auth);
+
+	
 	useEffect(() => {
 		// Only run on initial mount if a token already exists
 		const initialToken = localStorage.getItem("token");
 		if (initialToken && initialToken !== "null" && initialToken !== "undefined") {
-			handleGetProfile(initialToken);
+			if(user === null) {
+				handleGetProfile(initialToken);
+			}
 		}
-	}, [handleGetProfile]);
+	}, [handleGetProfile, user]);
 
 	return {
 		handleRegister,
