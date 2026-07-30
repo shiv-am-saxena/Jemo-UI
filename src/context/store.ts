@@ -3,18 +3,28 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./userSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
+import chatSlice from "./chatSlice";
+import messageReducer from "./messageSlice";
 const safeStorage = (storage as any).default || storage;
 
-const persistConfig = {
-	key: "root",
+const userConfig = {
+	key: "user",
 	storage: safeStorage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userSlice);
+const userReducer = persistReducer(userConfig, userSlice);
+
+const chatConfig = {
+	key: "chat",
+	storage: safeStorage,
+};
+const chatReducer = persistReducer(chatConfig, chatSlice);
+
 const store = configureStore({
 	reducer: {
-		auth: persistedReducer,
+		auth: userReducer,
+		chats: chatReducer,
+		messages: messageReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

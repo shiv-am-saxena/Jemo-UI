@@ -7,6 +7,8 @@ import Callback from "../features/auth/page/Callback";
 import useAuth from "../features/auth/hooks/useAuth";
 import Verification from "../features/auth/page/Verification";
 import ChatWrapper from "../features/chat/pages/ChatWrapper";
+import NewChat from "../features/chat/pages/NewChat";
+import ExistingChat from "../features/chat/pages/ExistingChat";
 function AppRouter() {
     useAuth();
     return (
@@ -18,7 +20,12 @@ function AppRouter() {
                 <Route path="callback" element={<Callback />} />
             </Route>
             <Route path="/verify-email" element={<Verification />} />
-            <Route path="/chat" element={<ChatWrapper />} />
+            <Route element={<ChatWrapper />} >
+                <Route path="/chat">
+                    <Route path="" element={<NewChat />} />
+                    <Route path=":chatId" element={<ExistingChat />} />
+                </Route>
+            </Route>
             <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     )

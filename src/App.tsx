@@ -1,6 +1,7 @@
 import Silk from './components/ui/Background'
 import GeminiInputBox from './components/ui/Input';
 import useChat from './features/chat/hooks/useChat';
+import { models } from './utils/inputUtils';
 
 export default function App() {
 	useChat();
@@ -15,8 +16,8 @@ export default function App() {
 					rotation={0}
 				/>
 				<div className="w-full mx-auto flex flex-col z-0 gap-10 items-center justify-center">
-					<h1 className="text-center font-bold font-stretch-150% text-white text-3xl sm:text-6xl">Where knowledge <br /> begins.</h1>
-					<GeminiInputBox />
+					<h1 className="text-center font-bold font-stretch-150% text-white text-4xl sm:text-6xl lg:text-7xl">Where knowledge <br /> begins.</h1>
+					<GeminiInputBox models={models} />
 				</div>
 			</header>
 		</main>

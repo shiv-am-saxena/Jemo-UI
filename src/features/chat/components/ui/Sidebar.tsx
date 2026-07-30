@@ -75,7 +75,7 @@ export const DesktopSidebar = ({
                     className
                 )}
                 animate={{
-                    width: animate ? (open ? "250px" : "70px") : "250px",
+                    width: animate ? (open ? "280px" : "70px") : "280px",
                 }}
                 {...props}
             >
@@ -121,12 +121,12 @@ export const MobileSidebar = ({
                                 ease: "easeInOut",
                             }}
                             className={cn(
-                                "fixed h-full w-full inset-0 bg-[#0e0e0e] p-10 z-100 flex flex-col justify-between",
+                                "fixed h-full w-full inset-0 bg-[#0e0e0e] p-5 z-100 flex flex-col justify-between",
                                 className
                             )}
                         >
                             <div
-                                className="absolute right-5 top-5 z-50 text-neutral-800 dark:text-neutral-200 cursor-pointer"
+                                className="absolute right-5 top-7.5 z-50 text-neutral-800 dark:text-neutral-200 cursor-pointer"
                                 onClick={() => setOpen(!open)}
                             >
                                 <TbX size={24} />
