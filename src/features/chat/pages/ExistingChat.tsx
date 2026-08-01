@@ -208,16 +208,20 @@ export default function ExistingChat() {
                                                         {...props}
                                                     />
                                                 ),
-                                                code: ({ node: _, inline, ...props }: any) =>
+                                                pre: ({ node: _, ...props }) => (
+                                                    <pre
+                                                        className="bg-[#1e1e1e] p-4 rounded-xl overflow-x-auto text-sm font-mono text-zinc-300 mt-4 mb-4 border border-zinc-700/50 shadow-sm"
+                                                        {...props}
+                                                    />
+                                                ),
+                                                code: ({ node: _, inline, className, ...props }: any) =>
                                                     inline ? (
                                                         <code
                                                             className="bg-zinc-700/50 px-1.5 py-0.5 rounded text-sm font-mono text-pink-300"
                                                             {...props}
                                                         />
                                                     ) : (
-                                                        <pre className="bg-[#1e1e1e] p-4 rounded-xl overflow-x-auto text-sm font-mono text-zinc-300 mt-4 mb-4 border border-zinc-700/50 shadow-sm">
-                                                            <code {...props} />
-                                                        </pre>
+                                                        <code className={className} {...props} />
                                                     ),
                                             }}
                                         >

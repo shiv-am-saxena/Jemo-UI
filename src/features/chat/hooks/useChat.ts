@@ -267,7 +267,7 @@ function useChat(initialChatId: string | null = null) {
 			const formData = new FormData();
 			formData.append("file", file);
 
-			const response = await axiosInstance.post("/upload", formData, {
+			const response = await axiosInstance.post("/chats/upload", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
