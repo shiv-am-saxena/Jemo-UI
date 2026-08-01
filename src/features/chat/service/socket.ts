@@ -12,6 +12,7 @@ const initializeSocket = () => {
 	socket.on("disconnect", () => {
 		console.log("Disconnected from the server");
 	});
+	return socket;
 };
 
 export default initializeSocket;

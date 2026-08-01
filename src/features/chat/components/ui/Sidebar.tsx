@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { cn } from "../../../../utils";
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { TbMenu, TbX } from "react-icons/tb";
 import { SidebarContext, useSidebar } from "../../hooks/useSidebar";
 import { Link } from "react-router-dom";
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
 
 interface Links {
     label: string;
@@ -90,7 +93,21 @@ export const MobileSidebar = ({
     children,
     title = "Here goes the sample title",
     ...props
-}: React.ComponentProps<"div">) => {
+}: React.ComponentProps<"div"> & { title?: React.ReactNode }) => {
+    const renderMarkdownTitle = (title: string) => (
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                    p: ({ node: _, ...props }) => <span {...props} />,
+                    strong: ({ node: _, ...props }) => <strong className="font-semibold text-white" {...props} />,
+                    em: ({ node: _, ...props }) => <em className="italic text-inherit" {...props} />,
+                    a: ({ node: _, ...props }) => <a className="text-blue-400 underline" {...props} />,
+                }}
+            >
+                {title}
+            </ReactMarkdown>
+        );
+
     const { open, setOpen } = useSidebar();
     return (
         <>
@@ -106,9 +123,9 @@ export const MobileSidebar = ({
                         onClick={() => setOpen(!open)}
                         size={24}
                     />
-                    <p className="max-w-70 sm:max-w-full overflow-hidden text-md text-ellipsis whitespace-nowrap text-white pr-10 truncate">
-                        {title}
-                    </p>
+                    <div className="max-w-70 sm:max-w-full overflow-hidden text-md text-ellipsis whitespace-nowrap text-white pr-10 truncate">
+                        {renderMarkdownTitle(title)}
+                    </div>
                 </div>
                 <AnimatePresence>
                     {open && (
@@ -158,8 +175,8 @@ export const SidebarLink = ({
             )}
             {...props}
             onClick={() => {
-                    setOpen(!open);
-                }
+                setOpen(!open);
+            }
             }
         >
             {link.icon}

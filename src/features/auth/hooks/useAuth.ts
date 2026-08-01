@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../context/hooks";
 import { clearUser, setLoading, setToken, setUser } from "../../../context/userSlice";
 import axiosInstance from "../../../utils/axiosConfig";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export default function useAuth() {
 	const dispatch = useAppDispatch();
@@ -48,9 +49,11 @@ export default function useAuth() {
 				const res = response.data.data;
 				dispatch(setUser({ user: res, token: currentToken }));
 			} catch (error) {
-				console.error("Failed to fetch user profile:", error);
-				toast.error("Failed to fetch user profile. Please log in again.");
-				handleLogout();
+				if (error instanceof AxiosError) {
+					console.error("Failed to fetch user profile:", error.response?.data.message || error.message);
+					toast.error("Failed to fetch user profile. Please log in again.");
+					handleLogout();
+				}
 			}
 		},
 		[dispatch, handleLogout],
@@ -81,7 +84,7 @@ export default function useAuth() {
 
 	const { user } = useAppSelector((state) => state.auth);
 
-	
+
 	useEffect(() => {
 		// Only run on initial mount if a token already exists
 		const initialToken = localStorage.getItem("token");

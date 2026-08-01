@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect, type DragEvent, type ChangeEvent } from 'react';
-import { FiPlus, FiSend, FiX, FiFile, FiImage, FiMic, FiChevronDown, FiCheck } from 'react-icons/fi';
+import { FiPlus, FiSend, FiX, FiFile, FiImage, FiMic, FiChevronDown, FiCheck, FiGlobe } from 'react-icons/fi';
 
 // --- Types ---
 export interface AIModel {
@@ -12,20 +12,26 @@ export interface AIModel {
 export interface GeminiInputBoxProps {
     models?: AIModel[];
     defaultModelId?: string;
-    onSubmit?: (data: { text: string; files: File[]; modelId?: string }) => void;
+    // Updated onSubmit to include webSearch boolean
+    onSubmit?: (data: { text: string; files: File[]; modelId?: string; webSearch: boolean }) => void;
     onMicrophoneClick?: () => void;
+    disabled?: boolean; // New prop to disable the input box
 }
 
 const GeminiInputBox: React.FC<GeminiInputBoxProps> = ({
     models = [],
     defaultModelId,
     onSubmit,
-    onMicrophoneClick
+    onMicrophoneClick,
+    disabled = false, // New prop to disable the input box
 }) => {
     // --- State ---
     const [text, setText] = useState('');
     const [files, setFiles] = useState<File[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+
+    // Web Search State
+    const [isWebSearchEnabled, setIsWebSearchEnabled] = useState(false);
 
     // Model Selection State
     const [selectedModelId, setSelectedModelId] = useState<string | undefined>(
@@ -118,7 +124,8 @@ const GeminiInputBox: React.FC<GeminiInputBoxProps> = ({
         const payload = {
             text,
             files,
-            modelId: selectedModelId
+            modelId: selectedModelId,
+            webSearch: isWebSearchEnabled
         };
 
         if (onSubmit) {
@@ -130,6 +137,9 @@ const GeminiInputBox: React.FC<GeminiInputBoxProps> = ({
         // Reset state after submit
         setText('');
         setFiles([]);
+        // Optional: you can choose to reset the web search state here or keep it active for the next message
+        // setIsWebSearchEnabled(false);
+
         if (textareaRef.current) textareaRef.current.style.height = 'auto';
     };
 
@@ -272,13 +282,14 @@ const GeminiInputBox: React.FC<GeminiInputBoxProps> = ({
                         placeholder="Ask..."
                         className="flex-1 max-h-50 bg-transparent py-2.5 text-zinc-100 placeholder-zinc-400 text-lg outline-none resize-none overflow-y-auto self-center"
                         rows={1}
+                        disabled={disabled} // Disable textarea when disabled prop is true
                     />
 
                     {/* Right Side Controls */}
                     <div className="flex items-center gap-1 shrink-0 mb-0.5 self-center">
                         {/* Inline Model Selector Dropdown */}
                         {models.length > 0 && (
-                            <div className="relative flex items-center mr-2" ref={dropdownRef}>
+                            <div className="relative flex items-center mr-1" ref={dropdownRef}>
                                 <button
                                     onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
                                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[15px] font-normal text-zinc-300 hover:bg-zinc-700/50 transition-colors"
@@ -318,6 +329,18 @@ const GeminiInputBox: React.FC<GeminiInputBoxProps> = ({
                                 )}
                             </div>
                         )}
+
+                        {/* Web Search Toggle Button */}
+                        <button
+                            onClick={() => setIsWebSearchEnabled(!isWebSearchEnabled)}
+                            className={`p-2.5 rounded-full transition-colors flex items-center gap-2 ${isWebSearchEnabled
+                                ? 'text-blue-400 bg-blue-500/10 hover:bg-blue-500/20'
+                                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700/50'
+                                }`}
+                            title={isWebSearchEnabled ? "Disable web search" : "Enable web search"}
+                        >
+                            <FiGlobe className="w-5 h-5" strokeWidth={1.5} />
+                        </button>
 
                         {/* Microphone Button (Visible when empty or listening) */}
                         {(!hasContent || isListening) && (

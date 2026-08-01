@@ -1,15 +1,24 @@
-import { useAppSelector } from '../../../context/hooks';
-import { Link, Navigate, Outlet, useParams } from 'react-router-dom';
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useAppDispatch, useAppSelector } from '../../../context/hooks';
+import { Link, Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { SidebarBody, SidebarProvider } from '../components/ui/Sidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '../../../utils';
 import { Logo, LogoIcon } from '../components/Logo';
 import { RiChatNewLine } from 'react-icons/ri';
 import { VscLibrary } from 'react-icons/vsc';
 import { IoSearch } from 'react-icons/io5';
+import { RiDeleteBinLine } from 'react-icons/ri';
 import { motion } from 'motion/react';
 import useAuth from '../../auth/hooks/useAuth';
 import useChat from '../hooks/useChat';
+import axiosInstance from '../../../utils/axiosConfig';
+import { removeChat } from '../../../context/chatSlice';
+import { clearMessages, setChatId as setMessageChatId } from '../../../context/messageSlice';
+import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const links = [
     {
@@ -29,6 +38,8 @@ const links = [
     }
 ];
 function ChatWrapper() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { isAuthenticated, user } = useAppSelector((state) => state.auth);
     const { handleLogout } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -37,6 +48,50 @@ function ChatWrapper() {
     const { chats } = useAppSelector((state) => state.chats);
     const [chatTitle, setChatTitle] = useState<string>("");
     useChat();
+
+    useEffect(() => {
+        const currentChat = chats?.find((chat) => chat._id === chatId);
+
+        setChatTitle(currentChat?.title ?? "");
+    }, [chatId, chats]);
+
+    const handleDeleteChat = async (targetChatId: string) => {
+        const shouldDelete = window.confirm("Delete this chat and its messages?");
+
+        if (!shouldDelete) return;
+
+        try {
+            await axiosInstance.delete(`/chats/${targetChatId}`);
+            dispatch(removeChat(targetChatId));
+
+            if (chatId === targetChatId) {
+                dispatch(clearMessages());
+                dispatch(setMessageChatId(null));
+                setChatTitle("");
+                navigate("/chat");
+            }
+
+            toast.success("Chat deleted.");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to delete chat.");
+        }
+    };
+
+    const renderMarkdownTitle = (title: string) => (
+        <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+                p: ({ node: _, ...props }) => <span {...props} />,
+                strong: ({ node: _, ...props }) => <strong className="font-semibold text-white" {...props} />,
+                em: ({ node: _, ...props }) => <em className="italic text-inherit" {...props} />,
+                a: ({ node: _, ...props }) => <a className="text-blue-400 underline" {...props} />,
+            }}
+        >
+            {title}
+        </ReactMarkdown>
+    );
+
     if (!isAuthenticated) {
         return (
             <Navigate to="/auth/login" replace />
@@ -46,7 +101,7 @@ function ChatWrapper() {
     return (
         <div className={cn("flex overflow-hidden bg-[#0e0e0e] flex-col md:flex-row h-screen")}>
             <SidebarProvider open={sidebarOpen} setOpen={setSidebarOpen}>
-                <SidebarBody title={chatTitle} className={`justify-between gap-10 pb-5 ${sidebarOpen ? "bg-neutral-800" : "bg-[#0e0e0e]"} border-r border-neutral-700`}>
+                <SidebarBody title={chatTitle || "Jemo"} className={`justify-between gap-10 pb-5 ${sidebarOpen ? "bg-neutral-800" : "bg-[#0e0e0e]"} border-r border-neutral-700`}>
                     <div className="flex flex-1 flex-col h-5/6">
                         {sidebarOpen
                             ? <Logo onClick={() => setSidebarOpen(!sidebarOpen)} />
@@ -97,7 +152,7 @@ function ChatWrapper() {
                                 <h3 className="text-sm text-zinc-400 font-semibold px-2">Recents</h3>
                                 {chats?.length === 0 ? (
                                     <motion.div
-                                        initial={{ opacity: 0, x:0 }}
+                                        initial={{ opacity: 0, x: 0 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: 0 }}
                                         transition={{ duration: 0.2, delay: 0.1 }}
@@ -116,14 +171,28 @@ function ChatWrapper() {
                                                 key={chat._id}
                                                 onClick={() => setChatTitle(chat.title)}
                                             >
-                                                <Link
-                                                    to={`/chat/${chat._id}`}
-                                                    className={`${chatId === chat._id ? "bg-zinc-900" : "bg-transparent"} hover:bg-zinc-900 rounded-xl px-2 py-1 block`}
-                                                >
-                                                    <div className="text-white truncate">
-                                                        {chat.title}
-                                                    </div>
-                                                </Link>
+                                                <div className={`group flex items-center gap-1 rounded-xl px-2 py-1 hover:bg-zinc-900 ${chatId === chat._id ? "bg-zinc-900" : "bg-transparent"}`}>
+                                                    <Link
+                                                        to={`/chat/${chat._id}`}
+                                                        className={` flex-1 min-w-0 rounded-xl block`}
+                                                    >
+                                                        <div className="text-white truncate min-w-0">
+                                                            {renderMarkdownTitle(chat.title)}
+                                                        </div>
+                                                    </Link>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                            void handleDeleteChat(chat._id);
+                                                        }}
+                                                        className="text-zinc-400 hover:text-red-400 hover:bg-zinc-800 rounded-full p-2"
+                                                        aria-label={`Delete ${chat.title}`}
+                                                    >
+                                                        <RiDeleteBinLine size={14} />
+                                                    </button>
+                                                </div>
                                             </motion.div>
                                         ))}
                                     </div>
