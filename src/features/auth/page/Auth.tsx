@@ -9,7 +9,7 @@ function Auth() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            location("/", { replace: true });
+            location("/chat", { replace: true });
         }
     }, [isAuthenticated, location]);
 
