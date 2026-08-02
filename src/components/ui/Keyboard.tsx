@@ -11,26 +11,26 @@ import React, {
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../../utils";
 import {
-    IconBrightnessDown,
-    IconBrightnessUp,
-    IconCaretRightFilled,
-    IconCaretUpFilled,
-    IconChevronUp,
-    IconMicrophone,
-    IconMoon,
-    IconPlayerSkipForward,
-    IconPlayerTrackNext,
-    IconPlayerTrackPrev,
-    IconTable,
-    IconVolume,
-    IconVolume2,
-    IconVolume3,
-    IconSearch,
-    IconWorld,
-    IconCommand,
-    IconCaretLeftFilled,
-    IconCaretDownFilled,
-} from "@tabler/icons-react";
+    TbBrightnessDown,
+    TbBrightnessUp,
+    TbCaretRightFilled,
+    TbCaretUpFilled,
+    TbChevronUp,
+    TbMicrophone,
+    TbMoon,
+    TbPlayerSkipForward,
+    TbPlayerTrackNext,
+    TbPlayerTrackPrev,
+    TbTable,
+    TbVolume,
+    TbVolume2,
+    TbVolume3,
+    TbSearch,
+    TbWorld,
+    TbCommand,
+    TbCaretLeftFilled,
+    TbCaretDownFilled,
+} from "react-icons/tb";
 
 // Sound sprite definitions from config.json [startMs, durationMs]
 // Key down sounds - half duration for a snappy press sound
@@ -528,51 +528,51 @@ export const Keypad = () => {
                     <span>esc</span>
                 </Key>
                 <Key keyCode="F1">
-                    <IconBrightnessDown className="h-1.5 w-1.5" />
+                    <TbBrightnessDown className="h-1.5 w-1.5" />
                     <span className="mt-1">F1</span>
                 </Key>
                 <Key keyCode="F2">
-                    <IconBrightnessUp className="h-1.5 w-1.5" />
+                    <TbBrightnessUp className="h-1.5 w-1.5" />
                     <span className="mt-1">F2</span>
                 </Key>
                 <Key keyCode="F3">
-                    <IconTable className="h-1.5 w-1.5" />
+                    <TbTable className="h-1.5 w-1.5" />
                     <span className="mt-1">F3</span>
                 </Key>
                 <Key keyCode="F4">
-                    <IconSearch className="h-1.5 w-1.5" />
+                    <TbSearch className="h-1.5 w-1.5" />
                     <span className="mt-1">F4</span>
                 </Key>
                 <Key keyCode="F5">
-                    <IconMicrophone className="h-1.5 w-1.5" />
+                    <TbMicrophone className="h-1.5 w-1.5" />
                     <span className="mt-1">F5</span>
                 </Key>
                 <Key keyCode="F6">
-                    <IconMoon className="h-1.5 w-1.5" />
+                    <TbMoon className="h-1.5 w-1.5" />
                     <span className="mt-1">F6</span>
                 </Key>
                 <Key keyCode="F7">
-                    <IconPlayerTrackPrev className="h-1.5 w-1.5" />
+                    <TbPlayerTrackPrev className="h-1.5 w-1.5" />
                     <span className="mt-1">F7</span>
                 </Key>
                 <Key keyCode="F8">
-                    <IconPlayerSkipForward className="h-1.5 w-1.5" />
+                    <TbPlayerSkipForward className="h-1.5 w-1.5" />
                     <span className="mt-1">F8</span>
                 </Key>
                 <Key keyCode="F9">
-                    <IconPlayerTrackNext className="h-1.5 w-1.5" />
+                    <TbPlayerTrackNext className="h-1.5 w-1.5" />
                     <span className="mt-1">F9</span>
                 </Key>
                 <Key keyCode="F10">
-                    <IconVolume3 className="h-1.5 w-1.5" />
+                    <TbVolume3 className="h-1.5 w-1.5" />
                     <span className="mt-1">F10</span>
                 </Key>
                 <Key keyCode="F11">
-                    <IconVolume2 className="h-1.5 w-1.5" />
+                    <TbVolume2 className="h-1.5 w-1.5" />
                     <span className="mt-1">F11</span>
                 </Key>
                 <Key keyCode="F12">
-                    <IconVolume className="h-1.5 w-1.5" />
+                    <TbVolume className="h-1.5 w-1.5" />
                     <span className="mt-1">F12</span>
                 </Key>
                 <Key containerClassName="rounded-tr-xl" className="rounded-tr-lg">
@@ -747,10 +747,10 @@ export const Keypad = () => {
                     className="rounded-bl-lg"
                 >
                     <span>fn</span>
-                    <IconWorld className="h-1.5 w-1.5" />
+                    <TbWorld className="h-1.5 w-1.5" />
                 </ModifierKey>
                 <ModifierKey keyCode="ControlLeft">
-                    <IconChevronUp className="h-1.5 w-1.5" />
+                    <TbChevronUp className="h-1.5 w-1.5" />
                     <span>control</span>
                 </ModifierKey>
                 <ModifierKey keyCode="AltLeft">
@@ -758,12 +758,12 @@ export const Keypad = () => {
                     <span>option</span>
                 </ModifierKey>
                 <ModifierKey keyCode="MetaLeft" className="w-8">
-                    <IconCommand className="h-1.5 w-1.5" />
+                    <TbCommand className="h-1.5 w-1.5" />
                     <span>command</span>
                 </ModifierKey>
                 <Key keyCode="Space" className="w-[8.2rem]" />
                 <ModifierKey keyCode="MetaRight" className="w-8">
-                    <IconCommand className="h-1.5 w-1.5" />
+                    <TbCommand className="h-1.5 w-1.5" />
                     <span>command</span>
                 </ModifierKey>
                 <ModifierKey keyCode="AltRight">
@@ -773,14 +773,14 @@ export const Keypad = () => {
                 {/* Arrow Keys */}
                 <div className="flex h-6 w-[4.9rem] items-center justify-end rounded-sm p-[0.5px]">
                     <Key keyCode="ArrowLeft" className="h-6 w-6">
-                        <IconCaretLeftFilled className="h-1.5 w-1.5" />
+                        <TbCaretLeftFilled className="h-1.5 w-1.5" />
                     </Key>
                     <div className="flex flex-col">
                         <Key keyCode="ArrowUp" className="h-3 w-6">
-                            <IconCaretUpFilled className="h-1.5 w-1.5" />
+                            <TbCaretUpFilled className="h-1.5 w-1.5" />
                         </Key>
                         <Key keyCode="ArrowDown" className="h-3 w-6">
-                            <IconCaretDownFilled className="h-1.5 w-1.5" />
+                            <TbCaretDownFilled className="h-1.5 w-1.5" />
                         </Key>
                     </div>
                     <Key
@@ -788,7 +788,7 @@ export const Keypad = () => {
                         containerClassName="rounded-br-xl"
                         className="h-6 w-6 rounded-br-lg"
                     >
-                        <IconCaretRightFilled className="h-1.5 w-1.5" />
+                        <TbCaretRightFilled className="h-1.5 w-1.5" />
                     </Key>
                 </div>
             </Row>
