@@ -78,7 +78,7 @@ export default function useAuth() {
 
 		// 6. Pass the fresh token directly to handleGetProfile
 		handleGetProfile(token);
-		navigate("/", { replace: true });
+		navigate("/chat", { replace: true });
 	}, [dispatch, handleGetProfile, navigate]);
 
 
