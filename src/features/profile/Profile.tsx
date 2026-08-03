@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAppSelector } from "../../context/hooks";
 
 function Profile() {
@@ -16,18 +16,7 @@ function Profile() {
 
     if (!isAuthenticated || !user) {
         return (
-            <main className="min-h-screen bg-[#0e0e0e] pt-28 px-4 text-white">
-                <div className="mx-auto max-w-xl rounded-2xl border border-zinc-700 bg-zinc-900 p-6 space-y-4">
-                    <h1 className="text-2xl font-semibold">Profile</h1>
-                    <p className="text-zinc-300">You need to sign in to view your profile.</p>
-                    <Link
-                        to="/auth/login"
-                        className="inline-block rounded-md border border-white px-4 py-2 text-sm text-white hover:bg-zinc-800"
-                    >
-                        Go to Login
-                    </Link>
-                </div>
-            </main>
+            <Navigate to="/auth/login" replace />
         );
     }
 
