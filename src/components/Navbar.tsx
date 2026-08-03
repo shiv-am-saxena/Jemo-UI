@@ -35,7 +35,7 @@ function Navbar() {
                     {isOpen && (
                         <div className="absolute right-0 mt-2 w-40 bg-zinc-800 border border-white rounded-md shadow-lg z-10 transition-all duration-300 ease-in-out">
                             <Link to="/profile" className="block px-4 py-2 text-white hover:bg-zinc-700">Profile</Link>
-                            <Link to="/settings" className="block px-4 py-2 text-white hover:bg-zinc-700">Settings</Link>
+                            <Link to="/chat" className="block px-4 py-2 text-white hover:bg-zinc-700">Chats</Link>
                             <Link to="#" className="block px-4 py-2 text-white hover:bg-zinc-700" onClick={(() => {setIsOpen(false); handleLogout()})}>
                                 Logout
                             </Link>

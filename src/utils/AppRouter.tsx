@@ -9,6 +9,8 @@ import Verification from "../features/auth/page/Verification";
 import ChatWrapper from "../features/chat/pages/ChatWrapper";
 import NewChat from "../features/chat/pages/NewChat";
 import ExistingChat from "../features/chat/pages/ExistingChat";
+import Profile from "../features/profile/Profile";
+
 function AppRouter() {
     useAuth();
     return (
@@ -26,6 +28,7 @@ function AppRouter() {
                     <Route path=":chatId" element={<ExistingChat />} />
                 </Route>
             </Route>
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     )

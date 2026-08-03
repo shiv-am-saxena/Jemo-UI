@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 interface UserState {
 	name: string;
 	email: string;
-	verified: boolean;
+	isVerified: boolean;
 	token: string;
 }
 
@@ -18,7 +18,7 @@ const initialState: initialStateType = {
 	user: {
 		name: "",
 		email: "",
-		verified: false,
+		isVerified: false,
 		token: "",
 	},
 	isAuthenticated: false,

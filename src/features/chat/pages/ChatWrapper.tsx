@@ -246,8 +246,8 @@ function ChatWrapper() {
                         {
                             isProfileOpen && (
                                 <div className="absolute left-0 bottom-full mb-2 w-40 bg-zinc-800 border border-white rounded-md shadow-lg z-10 transition-all duration-300 ease-in-out">
+                                    <Link to="/chat" className="block px-4 py-2 text-white hover:bg-zinc-700">Home</Link>
                                     <Link to="/profile" className="block px-4 py-2 text-white hover:bg-zinc-700">Profile</Link>
-                                    <Link to="/settings" className="block px-4 py-2 text-white hover:bg-zinc-700">Settings</Link>
                                     <Link to="#" className="block px-4 py-2 text-white hover:bg-zinc-700" onClick={(() => { setIsProfileOpen(false); handleLogout() })}>
                                         Logout
                                     </Link>
